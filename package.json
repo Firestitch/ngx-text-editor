@@ -65,5 +65,7 @@
   "engines": {
     "node": ">=6.0.0"
   },
-  "peerDependencies": {}
+  "peerDependencies": {
+    "ngx-monaco-editor": ">=7.0.0"
+  }
 }
