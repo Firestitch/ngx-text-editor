@@ -6,15 +6,16 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { FsExampleModule } from '@firestitch/example';
 import { FsMessageModule } from '@firestitch/message';
+import { FsTextEditorModule } from '@firestitch/text-editor';
 
 import { ToastrModule } from 'ngx-toastr';
-
-import { FsComponentModule } from '@firestitch/package';
+import { MonacoEditorModule } from 'ngx-monaco-editor';
 
 import { AppMaterialModule } from './material.module';
 import {
   ExampleComponent,
-  ExamplesComponent
+  ExamplesComponent,
+  CssComponent,
 } from './components';
 import { AppComponent } from './app.component';
 
@@ -22,14 +23,16 @@ const routes: Routes = [
   { path: '', component: ExamplesComponent },
 ];
 
+
 @NgModule({
   bootstrap: [ AppComponent ],
   imports: [
     BrowserModule,
-    FsComponentModule,
+    FsTextEditorModule,
     BrowserAnimationsModule,
     AppMaterialModule,
     FormsModule,
+    MonacoEditorModule.forRoot(),
     FsExampleModule.forRoot(),
     FsMessageModule.forRoot(),
     ToastrModule.forRoot({ preventDuplicates: true }),
@@ -40,7 +43,8 @@ const routes: Routes = [
   declarations: [
     AppComponent,
     ExamplesComponent,
-    ExampleComponent
+    ExampleComponent,
+    CssComponent,
   ],
   providers: [
   ],
