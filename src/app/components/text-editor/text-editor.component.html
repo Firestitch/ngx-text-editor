@@ -1,6 +1,7 @@
 <ngx-monaco-editor
+  #ngxMonacoEditor
   [ngModel]="value"
   (ngModelChange)="writeValue($event)"
   [options]="config"
-  (onInit)="onEditorInit($event)"
-></ngx-monaco-editor>
+  (onInit)="onEditorInit($event)">
+</ngx-monaco-editor>

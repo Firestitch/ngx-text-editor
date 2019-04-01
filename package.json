@@ -1,8 +1,8 @@
 {
-  "name": "@firestitch/package",
-  "title": "Code Editor",
+  "name": "@firestitch/text-editor",
+  "title": "Text Editor",
   "description": "@firestitch/ngx-text-editor",
-  "version": "0.1.0",
+  "version": "7.0.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/Firestitch/ngx-text-editor"
@@ -65,5 +65,7 @@
   "engines": {
     "node": ">=6.0.0"
   },
-  "peerDependencies": {}
+  "peerDependencies": {
+    "ngx-monaco-editor": ">=7.0.0"
+  }
 }

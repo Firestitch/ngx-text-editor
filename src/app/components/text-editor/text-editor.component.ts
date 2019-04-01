@@ -1,5 +1,6 @@
-import { Component, EventEmitter, forwardRef, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, forwardRef, Input, OnInit, Output, ViewChild, ContentChild } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { EditorComponent } from 'ngx-monaco-editor';
 
 
 @Component({
@@ -16,9 +17,14 @@ export class FsTextEditorComponent implements OnInit, ControlValueAccessor {
 
   @Input() public config = {};
   @Output() public init = new EventEmitter();
+  @ViewChild('ngxMonacoEditor') _editorContainer: EditorComponent;
 
   public defaultConfig = {
-    minimap: { enabled: false },
+    minimap: {
+      enabled: false
+    },
+    theme: 'vs-dark',
+    automaticLayout: true
   };
 
   public propagateChange = (_: any) => {};
@@ -26,9 +32,13 @@ export class FsTextEditorComponent implements OnInit, ControlValueAccessor {
 
   private _value = '';
 
-  constructor() {}
+  constructor() {
+
+  }
 
   public ngOnInit() {
+
+    //this._editorContainer._editorContainer.nativeElement.style.height = '1000px'
     if (this.config) {
       this.config = Object.assign({}, this.defaultConfig, this.config);
     }
