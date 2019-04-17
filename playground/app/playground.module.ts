@@ -16,6 +16,7 @@ import {
   ExampleComponent,
   ExamplesComponent,
   CssComponent,
+  StaticComponent,
 } from './components';
 import { AppComponent } from './app.component';
 
@@ -45,6 +46,7 @@ const routes: Routes = [
     ExamplesComponent,
     ExampleComponent,
     CssComponent,
+    StaticComponent,
   ],
   providers: [
   ],

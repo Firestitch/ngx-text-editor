@@ -1,6 +1,9 @@
-import { Component, EventEmitter, forwardRef, Input, OnInit, Output, ViewChild, ContentChild } from '@angular/core';
+import { Component, EventEmitter, forwardRef, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { EditorComponent } from 'ngx-monaco-editor';
+
+import ICodeEditor = monaco.editor.ICodeEditor;
+import { FsTextEditorConfig } from '../../interfaces/config.interface';
 
 
 @Component({
@@ -15,7 +18,7 @@ import { EditorComponent } from 'ngx-monaco-editor';
 })
 export class FsTextEditorComponent implements OnInit, ControlValueAccessor {
 
-  @Input() public config = {};
+  @Input() public config: FsTextEditorConfig = {};
   @Output() public init = new EventEmitter();
   @ViewChild('ngxMonacoEditor') _editorContainer: EditorComponent;
 
@@ -24,13 +27,20 @@ export class FsTextEditorComponent implements OnInit, ControlValueAccessor {
       enabled: false
     },
     theme: 'vs-dark',
-    automaticLayout: true
+    automaticLayout: true,
+    autoHeight: true,
   };
 
   public propagateChange = (_: any) => {};
   public onTouched = () => {};
 
+  public readonly LINE_HEIGHT = 18;
+
+  private _editorRef: ICodeEditor;
   private _value = '';
+
+  // Count of lines for apply auto height for editor
+  private _lineCount = 0;
 
   constructor() {
 
@@ -38,7 +48,6 @@ export class FsTextEditorComponent implements OnInit, ControlValueAccessor {
 
   public ngOnInit() {
 
-    //this._editorContainer._editorContainer.nativeElement.style.height = '1000px'
     if (this.config) {
       this.config = Object.assign({}, this.defaultConfig, this.config);
     }
@@ -49,6 +58,8 @@ export class FsTextEditorComponent implements OnInit, ControlValueAccessor {
   }
 
   public onEditorInit(event) {
+    this._editorRef = event;
+    this._initEditor();
     this.init.next(event);
   }
 
@@ -64,6 +75,39 @@ export class FsTextEditorComponent implements OnInit, ControlValueAccessor {
 
   public registerOnTouched(fn: any): void {
     this.onTouched = fn;
+  }
+
+  private _initEditor() {
+    if (this._editorRef && this.config.autoHeight) {
+      this._updateEditorHeight();
+
+      this._editorRef.onDidChangeModelContent((e) => {
+        this._updateEditorHeight();
+      });
+    }
+  }
+
+  private _updateEditorHeight() {
+    const editorDomNode = this._editorRef.getDomNode();
+
+    if (!editorDomNode) { return; }
+
+    const container = editorDomNode.getElementsByClassName('view-lines')[0] as HTMLElement;
+    const lineHeight = container.firstChild
+      ? (container.firstChild as HTMLElement).offsetHeight
+      : this.LINE_HEIGHT;
+
+    const editorModel = this._editorRef.getModel();
+
+    if (!editorModel) {
+      return;
+    }
+
+    const nextHeight = this._editorRef.getModel().getLineCount() * lineHeight;
+
+    // set the height and redo layout
+    editorDomNode.style.height = nextHeight + 'px';
+    this._editorRef.layout();
   }
 
 }
