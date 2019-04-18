@@ -19,6 +19,8 @@ import { FsTextEditorConfig } from '../../interfaces/config.interface';
 export class FsTextEditorComponent implements OnInit, ControlValueAccessor {
 
   @Input() public config: FsTextEditorConfig = {};
+  @Input() public scrollable = false;
+
   @Output() public init = new EventEmitter();
   @ViewChild('ngxMonacoEditor') _editorContainer: EditorComponent;
 
@@ -61,6 +63,10 @@ export class FsTextEditorComponent implements OnInit, ControlValueAccessor {
     this._editorRef = event;
     this._initEditor();
     this.init.next(event);
+
+    if (!this.scrollable) {
+      this._disableScroll();
+    }
   }
 
   public writeValue(value: any): void {
@@ -110,4 +116,12 @@ export class FsTextEditorComponent implements OnInit, ControlValueAccessor {
     this._editorRef.layout();
   }
 
+
+  private _disableScroll() {
+    const node = this._editorRef.getDomNode();
+
+    node.addEventListener('wheel', (e) => {
+      e.stopPropagation();
+    }, true);
+  }
 }
