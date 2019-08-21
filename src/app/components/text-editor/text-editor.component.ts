@@ -31,6 +31,7 @@ export class FsTextEditorComponent implements OnInit, ControlValueAccessor {
     theme: 'vs-dark',
     automaticLayout: true,
     autoHeight: true,
+    scrollBeyondLastLine: false
   };
 
   public propagateChange = (_: any) => {};
