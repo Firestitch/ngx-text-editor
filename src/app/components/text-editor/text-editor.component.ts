@@ -1,8 +1,9 @@
-import { Component, EventEmitter, forwardRef, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, forwardRef, Input, OnInit, Output, ViewChild, ElementRef } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { EditorComponent } from 'ngx-monaco-editor';
 
 import ICodeEditor = monaco.editor.ICodeEditor;
+
 import { FsTextEditorConfig } from '../../interfaces/config.interface';
 
 
@@ -22,32 +23,36 @@ export class FsTextEditorComponent implements OnInit, ControlValueAccessor {
   @Input() public scrollable = false;
 
   @Output() public init = new EventEmitter();
-  @ViewChild('ngxMonacoEditor') _editorContainer: EditorComponent;
+  @Output() public blur = new EventEmitter();
+  @ViewChild(EditorComponent) _editorContainer: EditorComponent;
 
-  public defaultConfig = {
+  public defaultConfig: FsTextEditorConfig = {
     minimap: {
       enabled: false
     },
     theme: 'vs-dark',
-    automaticLayout: true,
+    automaticLayout: false,
+    scrollBeyondLastLine: false,
     autoHeight: true,
-    scrollBeyondLastLine: false
+    scrollbar: {
+      vertical: 'hidden'
+    },
+    hideCursorInOverviewRuler: true
   };
 
-  public propagateChange = (_: any) => {};
+  public onChange = (_: any) => {};
   public onTouched = () => {};
+
+  public get monaco() {
+    return (<any>window).monaco;
+  };
+
+  constructor(private _element: ElementRef) {};
 
   public readonly LINE_HEIGHT = 18;
 
   private _editorRef: ICodeEditor;
   private _value = '';
-
-  // Count of lines for apply auto height for editor
-  private _lineCount = 0;
-
-  constructor() {
-
-  }
 
   public ngOnInit() {
 
@@ -61,23 +66,29 @@ export class FsTextEditorComponent implements OnInit, ControlValueAccessor {
   }
 
   public onEditorInit(event) {
-    this._editorRef = event;
-    this._initEditor();
-    this.init.next(event);
+    // Timeout allows the content to fully load to and calculate height
+    setTimeout(() => {
+      this._editorRef = event;
+      this._initEditor();
+      this.init.next(event);
 
-    if (!this.scrollable) {
-      this._disableScroll();
-    }
+      if (!this.scrollable) {
+        this._disableScroll();
+      }
+    });
   }
 
   public writeValue(value: any): void {
     this._value = value || '';
+  }
 
-    this.propagateChange(this._value);
+  public changed(e) {
+    this._value = e;
+    this.onChange(e);
   }
 
   public registerOnChange(fn: any): void {
-    this.propagateChange = fn;
+    this.onChange = fn;
   }
 
   public registerOnTouched(fn: any): void {
@@ -91,18 +102,25 @@ export class FsTextEditorComponent implements OnInit, ControlValueAccessor {
       this._editorRef.onDidChangeModelContent((e) => {
         this._updateEditorHeight();
       });
+
+      this._editorRef.onDidBlurEditorText(() => {
+        this.blur.next();
+      });
     }
   }
 
   private _updateEditorHeight() {
+
     const editorDomNode = this._editorRef.getDomNode();
 
-    if (!editorDomNode) { return; }
+    if (!editorDomNode) {
+      return;
+    }
 
     const container = editorDomNode.getElementsByClassName('view-lines')[0] as HTMLElement;
     const lineHeight = container.firstChild
-      ? (container.firstChild as HTMLElement).offsetHeight
-      : this.LINE_HEIGHT;
+    ? (container.firstChild as HTMLElement).offsetHeight
+    : this.LINE_HEIGHT;
 
     const editorModel = this._editorRef.getModel();
 

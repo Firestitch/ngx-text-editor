@@ -8,7 +8,8 @@ import { FsTextEditorConfig } from '@firestitch/text-editor';
   styleUrls: ['example.component.scss']
 })
 export class ExampleComponent {
-  public model = `<html>\n <body>\n <h1> Hello World</h1>\n </body>\n</html>`;
+  public model = `<html>\n  <body>\n    <h1>Hello World</h1>\n  </body>\n</html>`;
+
   public config: FsTextEditorConfig = {
     language: 'html',
   };

@@ -19,6 +19,7 @@ import {
   StaticComponent,
 } from './components';
 import { AppComponent } from './app.component';
+import { TypescriptComponent } from './components/typescript';
 
 const routes: Routes = [
   { path: '', component: ExamplesComponent },
@@ -47,8 +48,7 @@ const routes: Routes = [
     ExampleComponent,
     CssComponent,
     StaticComponent,
-  ],
-  providers: [
+    TypescriptComponent
   ],
 })
 export class PlaygroundModule {

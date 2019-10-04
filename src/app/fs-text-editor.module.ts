@@ -4,7 +4,6 @@ import { FormsModule } from '@angular/forms';
 
 import { MonacoEditorModule } from 'ngx-monaco-editor';
 import { FsTextEditorComponent } from './components/text-editor/text-editor.component';
-// import { FsComponentService } from './services';
 
 @NgModule({
   imports: [
@@ -19,16 +18,8 @@ import { FsTextEditorComponent } from './components/text-editor/text-editor.comp
   ],
   declarations: [
     FsTextEditorComponent,
-  ],
-  providers: [
-    // FsComponentService,
-  ],
+  ]
 })
 export class FsTextEditorModule {
-  /*static forRoot(): ModuleWithProviders {
-    return {
-      ngModule: FsComponentModule,
-      // providers: [FsComponentService]
-    };
-  }*/
+
 }
