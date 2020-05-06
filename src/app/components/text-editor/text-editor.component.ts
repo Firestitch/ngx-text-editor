@@ -24,7 +24,7 @@ export class FsTextEditorComponent implements OnInit, ControlValueAccessor {
 
   @Output() public init = new EventEmitter();
   @Output() public blur = new EventEmitter();
-  @ViewChild(EditorComponent) _editorContainer: EditorComponent;
+  @ViewChild(EditorComponent, { static: true }) _editorContainer: EditorComponent;
 
   public defaultConfig: FsTextEditorConfig = {
     minimap: {

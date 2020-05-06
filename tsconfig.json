@@ -1,6 +1,7 @@
 {
   "extends": "./tools/config/tsconfig.cli.json",
   "compilerOptions": {
+    "importHelpers": true,
     "paths": {
       "@firestitch/text-editor": [
         "src/public_api.ts"

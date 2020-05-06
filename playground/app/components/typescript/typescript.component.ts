@@ -9,7 +9,7 @@ import { FsTextEditorComponent } from 'src/app/components/text-editor/text-edito
 })
 export class TypescriptComponent {
 
-  @ViewChild(FsTextEditorComponent) textEditor: FsTextEditorComponent;
+  @ViewChild(FsTextEditorComponent, { static: true }) textEditor: FsTextEditorComponent;
 
   public model = ``;
   public config: FsTextEditorConfig = {
