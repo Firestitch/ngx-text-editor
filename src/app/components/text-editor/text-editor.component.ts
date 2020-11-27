@@ -132,9 +132,12 @@ export class FsTextEditorComponent implements OnInit, ControlValueAccessor {
 
     // set the height and redo layout
     editorDomNode.style.height = nextHeight + 'px';
-    this._editorRef.layout();
+    this.updateLayout();
   }
 
+  public updateLayout(): void {
+    this._editorRef.layout();
+  }
 
   private _disableScroll() {
     const node = this._editorRef.getDomNode();
