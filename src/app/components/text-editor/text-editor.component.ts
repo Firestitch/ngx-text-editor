@@ -83,8 +83,10 @@ export class FsTextEditorComponent implements OnInit, ControlValueAccessor {
   }
 
   public changed(e) {
-    this._value = e;
-    this.onChange(e);
+    if (this._value !== e) {
+      this._value = e;
+      this.onChange(e);
+    }
   }
 
   public registerOnChange(fn: any): void {
