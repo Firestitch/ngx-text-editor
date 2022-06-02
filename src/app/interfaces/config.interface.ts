@@ -1,6 +1,5 @@
-import IStandaloneEditorConstructionOptions = monaco.editor.IStandaloneEditorConstructionOptions;
+import { editor } from 'monaco-editor';
 
-
-export interface FsTextEditorConfig extends IStandaloneEditorConstructionOptions {
+export interface FsTextEditorConfig extends editor.IStandaloneEditorConstructionOptions {
   autoHeight?: boolean
 }

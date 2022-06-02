@@ -22,7 +22,7 @@
             "assets": [
               "playground/favicon.ico",
               "playground/assets",
-              { "glob": "**/*", "input": "node_modules/ngx-monaco-editor/assets/monaco", "output": "./assets/monaco/" }
+              { "glob": "**/*", "input": "node_modules/monaco-editor", "output": "./assets/monaco-editor/" }
             ],
             "styles": [
               "playground/styles.scss"

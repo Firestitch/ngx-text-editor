@@ -2,7 +2,7 @@ import { Component, EventEmitter, forwardRef, Input, OnInit, Output, ViewChild, 
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { EditorComponent } from 'ngx-monaco-editor';
 
-import ICodeEditor = monaco.editor.ICodeEditor;
+import { editor } from 'monaco-editor';
 
 import { FsTextEditorConfig } from '../../interfaces/config.interface';
 
@@ -51,7 +51,7 @@ export class FsTextEditorComponent implements OnInit, ControlValueAccessor {
 
   public readonly LINE_HEIGHT = 18;
 
-  private _editorRef: ICodeEditor;
+  private _editorRef: editor.ICodeEditor;
   private _value = '';
 
   public ngOnInit() {
