@@ -1,7 +1,19 @@
-import { Component, EventEmitter, forwardRef, Input, OnInit, Output, ViewChild, ElementRef } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  forwardRef,
+  Input,
+  OnInit,
+  Output,
+  ViewChild,
+  ElementRef,
+  OnDestroy,
+  Inject,
+} from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { EditorComponent } from 'ngx-monaco-editor';
+import { DOCUMENT } from '@angular/common';
 
+import { EditorComponent } from 'ngx-monaco-editor';
 import { editor } from 'monaco-editor';
 
 import { FsTextEditorConfig } from '../../interfaces/config.interface';
@@ -17,7 +29,7 @@ import { FsTextEditorConfig } from '../../interfaces/config.interface';
     multi: true
   }]
 })
-export class FsTextEditorComponent implements OnInit, ControlValueAccessor {
+export class FsTextEditorComponent implements OnInit, OnDestroy, ControlValueAccessor {
 
   @Input() public config: FsTextEditorConfig = {};
   @Input() public scrollable = false;
@@ -43,11 +55,17 @@ export class FsTextEditorComponent implements OnInit, ControlValueAccessor {
   public onChange = (_: any) => {};
   public onTouched = () => {};
 
+  private _window: any = this._document.defaultView;
+
   public get monaco() {
-    return (<any>window).monaco;
+    return this._window.monaco;
   };
 
-  constructor(private _element: ElementRef) {};
+  constructor(
+    private _element: ElementRef,
+    @Inject(DOCUMENT)
+    private _document: Document,
+  ) {};
 
   public readonly LINE_HEIGHT = 18;
 
@@ -59,6 +77,11 @@ export class FsTextEditorComponent implements OnInit, ControlValueAccessor {
     if (this.config) {
       this.config = Object.assign({}, this.defaultConfig, this.config);
     }
+  }
+
+  public ngOnDestroy() {
+    // must be there to cleanup https://github.com/microsoft/monaco-editor/issues/827
+    this._window.define = null;
   }
 
   get value() {
