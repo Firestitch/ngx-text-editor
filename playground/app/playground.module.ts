@@ -9,7 +9,6 @@ import { FsMessageModule } from '@firestitch/message';
 import { FsTextEditorModule } from '@firestitch/text-editor';
 
 import { ToastrModule } from 'ngx-toastr';
-import { MonacoEditorModule } from 'ngx-monaco-editor';
 
 import { AppMaterialModule } from './material.module';
 import {
@@ -30,11 +29,10 @@ const routes: Routes = [
   bootstrap: [ AppComponent ],
   imports: [
     BrowserModule,
-    FsTextEditorModule,
+    FsTextEditorModule.forRoot(),
     BrowserAnimationsModule,
     AppMaterialModule,
     FormsModule,
-    MonacoEditorModule.forRoot(),
     FsExampleModule.forRoot(),
     FsMessageModule.forRoot(),
     ToastrModule.forRoot({ preventDuplicates: true }),
