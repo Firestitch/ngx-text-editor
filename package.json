@@ -2,7 +2,7 @@
   "name": "@firestitch/text-editor",
   "title": "Text Editor",
   "description": "@firestitch/ngx-text-editor",
-  "version": "12.3.0",
+  "version": "12.3.1",
   "repository": {
     "type": "git",
     "url": "https://github.com/Firestitch/ngx-text-editor"
@@ -68,9 +68,6 @@
   },
   "engines": {
     "node": ">=6.0.0"
-  },
-  "peerDependencies": {
-    "ngx-monaco-editor": ">=12.0.0"
   },
   "overrides": {
     "ngx-monaco-editor": {
