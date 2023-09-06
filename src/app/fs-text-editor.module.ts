@@ -2,8 +2,9 @@ import { ModuleWithProviders, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
-import { MonacoEditorModule, NgxMonacoEditorConfig } from 'ngx-monaco-editor';
 import { FsTextEditorComponent } from './components/text-editor/text-editor.component';
+import { MonacoEditorModule } from './modules/ngx-monaco-editor/editor.module';
+import { NgxMonacoEditorConfig } from './modules/ngx-monaco-editor/config';
 
 
 @NgModule({
