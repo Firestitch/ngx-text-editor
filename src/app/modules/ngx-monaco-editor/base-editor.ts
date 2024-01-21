@@ -1,23 +1,30 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, Inject, OnDestroy, Output, ViewChild } from '@angular/core';
+
 import { Subscription } from 'rxjs';
+
+import { editor } from 'monaco-editor';
+
 import { NGX_MONACO_EDITOR_CONFIG, NgxMonacoEditorConfig } from './config';
 
 let loadedMonaco = false;
 let loadPromise: Promise<void>;
 
 @Component({
-  template: ''
+  template: '',
 })
 export abstract class BaseEditor implements AfterViewInit, OnDestroy {
-  @ViewChild('editorContainer', { static: true }) _editorContainer: ElementRef;
-  @Output() onInit = new EventEmitter<any>();
-  protected _editor: any;
+
+  @ViewChild('editorContainer', { static: true }) public _editorContainer: ElementRef;
+
+  @Output() public onInit = new EventEmitter<any>();
+
+  protected _editor: editor.ICodeEditor;
   protected _options: any;
   protected _windowResizeSubscription: Subscription;
 
   constructor(@Inject(NGX_MONACO_EDITOR_CONFIG) protected config: NgxMonacoEditorConfig) {}
 
-  ngAfterViewInit(): void {
+  public ngAfterViewInit(): void {
     if (loadedMonaco) {
       // Wait until monaco editor is available
       loadPromise.then(() => {
@@ -26,15 +33,16 @@ export abstract class BaseEditor implements AfterViewInit, OnDestroy {
     } else {
       loadedMonaco = true;
       loadPromise = new Promise<void>((resolve: any) => {
-        const baseUrl = (this.config.baseUrl || './assets') + '/monaco-editor/min/vs';
+        const baseUrl = `${this.config.baseUrl || './assets'  }/monaco-editor/min/vs`;
         if (typeof ((<any>window).monaco) === 'object') {
           resolve();
+
           return;
         }
         const onGotAmdLoader: any = () => {
           // Load monaco
-          (<any>window).require.config({ paths: { 'vs': `${baseUrl}` } });
-          (<any>window).require([`vs/editor/editor.main`], () => {
+          (<any>window).require.config({ paths: { vs: `${baseUrl}` } });
+          (<any>window).require(['vs/editor/editor.main'], () => {
             if (typeof this.config.onMonacoLoad === 'function') {
               this.config.onMonacoLoad();
             }
@@ -57,9 +65,7 @@ export abstract class BaseEditor implements AfterViewInit, OnDestroy {
     }
   }
 
-  protected abstract initMonaco(options: any): void;
-
-  ngOnDestroy() {
+  public ngOnDestroy() {
     if (this._windowResizeSubscription) {
       this._windowResizeSubscription.unsubscribe();
     }
@@ -68,4 +74,6 @@ export abstract class BaseEditor implements AfterViewInit, OnDestroy {
       this._editor = undefined;
     }
   }
+
+  protected abstract initMonaco(options: any): void;
 }

@@ -1,11 +1,12 @@
 import { Component, Inject, Input } from '@angular/core';
+
 import { fromEvent } from 'rxjs';
 
 import { BaseEditor } from './base-editor';
 import { NGX_MONACO_EDITOR_CONFIG, NgxMonacoEditorConfig } from './config';
 import { DiffEditorModel } from './types';
 
-declare var monaco: any;
+declare let monaco: any;
 
 @Component({
   selector: 'ngx-monaco-diff-editor',
@@ -20,7 +21,7 @@ declare var monaco: any;
       width: 100%;
       height: 98%;
     }
-  `]
+  `],
 })
 export class DiffEditorComponent extends BaseEditor {
 
@@ -29,7 +30,7 @@ export class DiffEditorComponent extends BaseEditor {
 
   @Input('options')
   set options(options: any) {
-    this._options = Object.assign({}, this.config.defaultOptions, options);
+    this._options = { ...this.config.defaultOptions, ...options };
     if (this._editor) {
       this._editor.dispose();
       this.initMonaco(options);
@@ -71,8 +72,8 @@ export class DiffEditorComponent extends BaseEditor {
     this._originalModel.language = this._originalModel.language || options.language;
     this._modifiedModel.language = this._modifiedModel.language || options.language;
 
-    let originalModel = monaco.editor.createModel(this._originalModel.code, this._originalModel.language);
-    let modifiedModel = monaco.editor.createModel(this._modifiedModel.code, this._modifiedModel.language);
+    const originalModel = monaco.editor.createModel(this._originalModel.code, this._originalModel.language);
+    const modifiedModel = monaco.editor.createModel(this._modifiedModel.code, this._modifiedModel.language);
 
     this._editorContainer.nativeElement.innerHTML = '';
     const theme = options.theme;
@@ -80,8 +81,8 @@ export class DiffEditorComponent extends BaseEditor {
     options.theme = theme;
     this._editor.setModel({
       original: originalModel,
-      modified: modifiedModel
-    });
+      modified: modifiedModel,
+    } as any);
 
     // refresh layout on resize event.
     if (this._windowResizeSubscription) {

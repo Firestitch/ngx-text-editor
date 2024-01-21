@@ -1,12 +1,13 @@
 import { Component, forwardRef, Inject, Input, NgZone } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+
 import { fromEvent } from 'rxjs';
 
 import { BaseEditor } from './base-editor';
 import { NGX_MONACO_EDITOR_CONFIG, NgxMonacoEditorConfig } from './config';
 import { NgxEditorModel } from './types';
 
-declare var monaco: any;
+declare let monaco: any;
 
 @Component({
   selector: 'ngx-monaco-editor',
@@ -25,25 +26,25 @@ declare var monaco: any;
   providers: [{
     provide: NG_VALUE_ACCESSOR,
     useExisting: forwardRef(() => EditorComponent),
-    multi: true
-  }]
+    multi: true,
+  }],
 })
 export class EditorComponent extends BaseEditor implements ControlValueAccessor {
   private _value: string = '';
 
-  propagateChange = (_: any) => {};
-  onTouched = () => {};
+  public propagateChange = (_: any) => {};
+  public onTouched = () => {};
 
   @Input('options')
-  set options(options: any) {
-    this._options = Object.assign({}, this.config.defaultOptions, options);
+  public set options(options: any) {
+    this._options = { ...this.config.defaultOptions, ...options };
     if (this._editor) {
       this._editor.dispose();
       this.initMonaco(options);
     }
   }
 
-  get options(): any {
+  public get options(): any {
     return this._options;
   }
 
@@ -60,7 +61,7 @@ export class EditorComponent extends BaseEditor implements ControlValueAccessor 
     super(editorConfig);
   }
 
-  writeValue(value: any): void {
+  public writeValue(value: any): void {
     this._value = value || '';
     // Fix for value change while dispose in process.
     setTimeout(() => {
@@ -70,11 +71,11 @@ export class EditorComponent extends BaseEditor implements ControlValueAccessor 
     });
   }
 
-  registerOnChange(fn: any): void {
+  public registerOnChange(fn: any): void {
     this.propagateChange = fn;
   }
 
-  registerOnTouched(fn: any): void {
+  public registerOnTouched(fn: any): void {
     this.onTouched = fn;
   }
 

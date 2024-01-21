@@ -1,14 +1,12 @@
 import { DOCUMENT } from '@angular/common';
 import {
   Component,
-  ElementRef,
   EventEmitter,
   Inject,
   Input,
   OnDestroy,
   OnInit,
   Output,
-  ViewChild,
   forwardRef,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -16,66 +14,60 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { editor } from 'monaco-editor';
 
 import { FsTextEditorConfig } from '../../interfaces/config.interface';
-import { EditorComponent } from '../../modules/ngx-monaco-editor/editor.component';
 
 
 @Component({
   selector: 'fs-text-editor',
-  templateUrl: 'text-editor.component.html',
-  styleUrls: [ 'text-editor.component.scss' ],
+  templateUrl: './text-editor.component.html',
+  styleUrls: ['./text-editor.component.scss'],
   providers: [{
     provide: NG_VALUE_ACCESSOR,
     useExisting: forwardRef(() => FsTextEditorComponent),
-    multi: true
-  }]
+    multi: true,
+  }],
 })
 export class FsTextEditorComponent implements OnInit, OnDestroy, ControlValueAccessor {
+
+  public readonly LINE_HEIGHT = 18;
 
   @Input() public config: FsTextEditorConfig = {};
   @Input() public scrollable = false;
 
-  @Output() public init = new EventEmitter();
+  @Output() public ready = new EventEmitter();
   @Output() public blur = new EventEmitter();
-  @ViewChild(EditorComponent, { static: true }) _editorContainer: EditorComponent;
 
   public defaultConfig: FsTextEditorConfig = {
     minimap: {
-      enabled: false
+      enabled: false,
     },
     theme: 'vs-dark',
     automaticLayout: false,
     scrollBeyondLastLine: false,
     autoHeight: true,
     scrollbar: {
-      vertical: 'hidden'
+      vertical: 'hidden',
     },
-    hideCursorInOverviewRuler: true
+    hideCursorInOverviewRuler: true,
   };
 
-  public onChange = (_: any) => {};
-  public onTouched = () => {};
-
-  private _window: any = this._document.defaultView;
-
-  public get monaco() {
-    return this._window.monaco;
-  };
-
-  constructor(
-    private _element: ElementRef,
-    @Inject(DOCUMENT)
-    private _document: Document,
-  ) {};
-
-  public readonly LINE_HEIGHT = 18;
+  public onChange: (_: any) => void;
+  public onTouched: () => void;
 
   private _editorRef: editor.ICodeEditor;
   private _value = '';
+  private _window: any = this._document.defaultView;
+
+  constructor(
+    @Inject(DOCUMENT) private _document: Document,
+  ) {}
+
+  public get monaco() {
+    return this._window.monaco;
+  }
 
   public ngOnInit() {
-
     if (this.config) {
-      this.config = Object.assign({}, this.defaultConfig, this.config);
+      this.config = { ...this.defaultConfig, ...this.config };
     }
   }
 
@@ -84,7 +76,7 @@ export class FsTextEditorComponent implements OnInit, OnDestroy, ControlValueAcc
     this._window.define = null;
   }
 
-  get value() {
+  public get value() {
     return this._value;
   }
 
@@ -93,10 +85,14 @@ export class FsTextEditorComponent implements OnInit, OnDestroy, ControlValueAcc
     setTimeout(() => {
       this._editorRef = event;
       this._initEditor();
-      this.init.next(event);
+      this.ready.next(event);
 
       if (!this.scrollable) {
         this._disableScroll();
+      }
+
+      if(this.config.ready) {
+        this.config.ready(this._editorRef);
       }
     });
   }
@@ -110,6 +106,10 @@ export class FsTextEditorComponent implements OnInit, OnDestroy, ControlValueAcc
       this._value = e;
       this.onChange(e);
     }
+  }
+
+  public updateLayout(): void {
+    this._editorRef.layout();
   }
 
   public registerOnChange(fn: any): void {
@@ -135,7 +135,6 @@ export class FsTextEditorComponent implements OnInit, OnDestroy, ControlValueAcc
   }
 
   private _updateEditorHeight() {
-
     const editorDomNode = this._editorRef.getDomNode();
 
     if (!editorDomNode) {
@@ -144,8 +143,8 @@ export class FsTextEditorComponent implements OnInit, OnDestroy, ControlValueAcc
 
     const container = editorDomNode.getElementsByClassName('view-lines')[0] as HTMLElement;
     const lineHeight = container.firstChild
-    ? (container.firstChild as HTMLElement).offsetHeight
-    : this.LINE_HEIGHT;
+      ? (container.firstChild as HTMLElement).offsetHeight
+      : this.LINE_HEIGHT;
 
     const editorModel = this._editorRef.getModel();
 
@@ -156,12 +155,8 @@ export class FsTextEditorComponent implements OnInit, OnDestroy, ControlValueAcc
     const nextHeight = this._editorRef.getModel().getLineCount() * lineHeight;
 
     // set the height and redo layout
-    editorDomNode.style.height = nextHeight + 'px';
+    editorDomNode.style.height = `${nextHeight  }px`;
     this.updateLayout();
-  }
-
-  public updateLayout(): void {
-    this._editorRef.layout();
   }
 
   private _disableScroll() {
