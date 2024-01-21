@@ -36,20 +36,6 @@ export class FsTextEditorComponent implements OnInit, OnDestroy, ControlValueAcc
   @Output() public ready = new EventEmitter();
   @Output() public blur = new EventEmitter();
 
-  public defaultConfig: FsTextEditorConfig = {
-    minimap: {
-      enabled: false,
-    },
-    theme: 'vs-dark',
-    automaticLayout: false,
-    scrollBeyondLastLine: false,
-    autoHeight: true,
-    scrollbar: {
-      vertical: 'hidden',
-    },
-    hideCursorInOverviewRuler: true,
-  };
-
   public onChange: (_: any) => void;
   public onTouched: () => void;
 
@@ -67,7 +53,21 @@ export class FsTextEditorComponent implements OnInit, OnDestroy, ControlValueAcc
 
   public ngOnInit() {
     if (this.config) {
-      this.config = { ...this.defaultConfig, ...this.config };
+
+      this.config = {
+        minimap: {
+          enabled: false,
+        },
+        theme: 'vs-dark',
+        automaticLayout: !!this.config.height,
+        scrollBeyondLastLine: false,
+        autoHeight: !this.config.height,
+        scrollbar: {
+          vertical: this.config.height ? 'auto' : 'hidden',
+        },
+        hideCursorInOverviewRuler: true,
+        ...this.config,
+      };
     }
   }
 
@@ -87,7 +87,7 @@ export class FsTextEditorComponent implements OnInit, OnDestroy, ControlValueAcc
       this._initEditor();
       this.ready.next(event);
 
-      if (!this.scrollable) {
+      if (!this.scrollable && !this.config.height) {
         this._disableScroll();
       }
 

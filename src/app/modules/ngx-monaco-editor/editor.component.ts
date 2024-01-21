@@ -13,10 +13,7 @@ declare let monaco: any;
   selector: 'ngx-monaco-editor',
   template: '<div class="editor-container" #editorContainer></div>',
   styles: [`
-      :host {
-          display: block;
-          height: 200px;
-      }
+
 
       .editor-container {
           width: 100%;
