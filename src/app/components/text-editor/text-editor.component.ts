@@ -1,17 +1,17 @@
+import { DOCUMENT } from '@angular/common';
 import {
   Component,
+  ElementRef,
   EventEmitter,
-  forwardRef,
+  Inject,
   Input,
+  OnDestroy,
   OnInit,
   Output,
   ViewChild,
-  ElementRef,
-  OnDestroy,
-  Inject,
+  forwardRef,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { DOCUMENT } from '@angular/common';
 
 import { editor } from 'monaco-editor';
 
