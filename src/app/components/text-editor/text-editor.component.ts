@@ -53,7 +53,6 @@ export class FsTextEditorComponent implements OnInit, OnDestroy, ControlValueAcc
 
   public ngOnInit() {
     if (this.config) {
-
       this.config = {
         minimap: {
           enabled: false,
@@ -61,7 +60,6 @@ export class FsTextEditorComponent implements OnInit, OnDestroy, ControlValueAcc
         theme: 'vs-dark',
         automaticLayout: !!this.config.height,
         scrollBeyondLastLine: false,
-        autoHeight: !this.config.height,
         scrollbar: {
           vertical: this.config.height ? 'auto' : 'hidden',
         },
@@ -121,17 +119,18 @@ export class FsTextEditorComponent implements OnInit, OnDestroy, ControlValueAcc
   }
 
   private _initEditor() {
-    if (this._editorRef && this.config.autoHeight) {
+    if (this._editorRef && !this.config.height) {
       this._updateEditorHeight();
 
       this._editorRef.onDidChangeModelContent((e) => {
         this._updateEditorHeight();
       });
-
-      this._editorRef.onDidBlurEditorText(() => {
-        this.blur.next();
-      });
     }
+
+    this._editorRef.onDidBlurEditorText(() => {
+      this.blur.next();
+      this.config?.blur();
+    });
   }
 
   private _updateEditorHeight() {
