@@ -133,6 +133,12 @@ export class FsTextEditorComponent implements OnInit, OnDestroy, ControlValueAcc
         this.config.blur();
       }
     });
+
+    this._editorRef.onDidFocusEditorText(() => {
+      if(this.config.focus) {
+        this.config.focus();
+      }
+    });
   }
 
   private _updateEditorHeight() {
