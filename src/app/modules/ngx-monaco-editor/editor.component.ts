@@ -17,7 +17,7 @@ declare let monaco: any;
 
       .editor-container {
           width: 100%;
-          height: 98%;
+          height: 100%;
       }
   `],
   providers: [{
