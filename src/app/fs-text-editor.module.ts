@@ -8,19 +8,17 @@ import { NgxMonacoEditorConfig } from './modules/ngx-monaco-editor/config';
 
 
 @NgModule({
-  imports: [
-    CommonModule,
-    MonacoEditorModule,
-    FormsModule,
-  ],
-  exports: [
-    FsTextEditorComponent,
-  ],
-  entryComponents: [
-  ],
-  declarations: [
-    FsTextEditorComponent,
-  ]
+    imports: [
+        CommonModule,
+        MonacoEditorModule,
+        FormsModule,
+    ],
+    exports: [
+        FsTextEditorComponent,
+    ],
+    declarations: [
+        FsTextEditorComponent,
+    ]
 })
 export class FsTextEditorModule {
   static forRoot(config?: NgxMonacoEditorConfig): ModuleWithProviders<FsTextEditorModule> {
