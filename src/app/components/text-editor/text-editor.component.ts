@@ -41,11 +41,13 @@ export class FsTextEditorComponent implements OnInit, OnDestroy, ControlValueAcc
 
   private _editorRef: editor.ICodeEditor;
   private _value = '';
-  private _window: any = this._document.defaultView;
+  private _window: any;
 
   constructor(
     @Inject(DOCUMENT) private _document: Document,
-  ) {}
+  ) {
+    this._window = this._document.defaultView;
+  }
 
   public get monaco() {
     return this._window.monaco;
