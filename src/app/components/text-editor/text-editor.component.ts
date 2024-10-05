@@ -128,7 +128,7 @@ export class FsTextEditorComponent implements OnInit, OnDestroy, ControlValueAcc
     }
 
     this._editorRef.onDidBlurEditorText(() => {
-      this.blur.next();
+      this.blur.next(null);
       if(this.config.blur) {
         this.config.blur();
       }
