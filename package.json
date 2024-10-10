@@ -48,7 +48,7 @@
     "@angular/router": "^18.2.7",
     "@firestitch/component-tools": "^18.0.12",
     "@firestitch/drawer": "^18.0.0",
-    "@firestitch/example": "^18.0.2",
+    "@firestitch/example": "^18.0.4",
     "@firestitch/html": "^18.0.0",
     "@firestitch/iframe": "^18.0.0",
     "@firestitch/lint": "^18.0.4",
