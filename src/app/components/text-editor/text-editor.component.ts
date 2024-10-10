@@ -4,7 +4,6 @@ import {
   EventEmitter,
   Inject,
   Input,
-  OnDestroy,
   OnInit,
   Output,
   forwardRef,
@@ -26,7 +25,7 @@ import { FsTextEditorConfig } from '../../interfaces/config.interface';
     multi: true,
   }],
 })
-export class FsTextEditorComponent implements OnInit, OnDestroy, ControlValueAccessor {
+export class FsTextEditorComponent implements OnInit, ControlValueAccessor {
 
   public readonly LINE_HEIGHT = 18;
 
@@ -71,11 +70,6 @@ export class FsTextEditorComponent implements OnInit, OnDestroy, ControlValueAcc
     }
   }
 
-  public ngOnDestroy() {
-    // must be there to cleanup https://github.com/microsoft/monaco-editor/issues/827
-    this._window.define = null;
-  }
-
   public get value() {
     return this._value;
   }
@@ -94,6 +88,8 @@ export class FsTextEditorComponent implements OnInit, OnDestroy, ControlValueAcc
       if(this.config.ready) {
         this.config.ready(this._editorRef);
       }
+
+      this._cleanupAMDLoader();
     });
   }
 
@@ -174,5 +170,10 @@ export class FsTextEditorComponent implements OnInit, OnDestroy, ControlValueAcc
     node.addEventListener('wheel', (e) => {
       e.stopPropagation();
     }, true);
+  }
+
+  private _cleanupAMDLoader(): void {
+    // must be there to cleanup https://github.com/microsoft/monaco-editor/issues/827
+    this._window.define = null;
   }
 }
