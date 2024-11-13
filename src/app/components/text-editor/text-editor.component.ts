@@ -88,9 +88,12 @@ export class FsTextEditorComponent implements OnInit, ControlValueAccessor {
       if(this.config.ready) {
         this.config.ready(this._editorRef);
       }
-
-      this._cleanupAMDLoader();
     });
+
+    // moved forward for cases when several editors should be initialized on the same page
+    setTimeout(() => {
+      this._cleanupAMDLoader();
+    }, 100);
   }
 
   public writeValue(value: any): void {
