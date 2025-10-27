@@ -8,22 +8,25 @@ import {
   Output,
   forwardRef,
 } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormsModule } from '@angular/forms';
 
 import { editor } from 'monaco-editor';
 
 import { FsTextEditorConfig } from '../../interfaces/config.interface';
+import { EditorComponent } from '../../modules/ngx-monaco-editor/editor.component';
 
 
 @Component({
-  selector: 'fs-text-editor',
-  templateUrl: './text-editor.component.html',
-  styleUrls: ['./text-editor.component.scss'],
-  providers: [{
-    provide: NG_VALUE_ACCESSOR,
-    useExisting: forwardRef(() => FsTextEditorComponent),
-    multi: true,
-  }],
+    selector: 'fs-text-editor',
+    templateUrl: './text-editor.component.html',
+    styleUrls: ['./text-editor.component.scss'],
+    providers: [{
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => FsTextEditorComponent),
+            multi: true,
+        }],
+    standalone: true,
+    imports: [EditorComponent, FormsModule],
 })
 export class FsTextEditorComponent implements OnInit, ControlValueAccessor {
 

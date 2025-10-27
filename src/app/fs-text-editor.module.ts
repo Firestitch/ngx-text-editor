@@ -12,11 +12,9 @@ import { NgxMonacoEditorConfig } from './modules/ngx-monaco-editor/config';
         CommonModule,
         MonacoEditorModule,
         FormsModule,
-    ],
-    exports: [
         FsTextEditorComponent,
     ],
-    declarations: [
+    exports: [
         FsTextEditorComponent,
     ]
 })

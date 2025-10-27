@@ -10,9 +10,9 @@ import { NgxEditorModel } from './types';
 declare let monaco: any;
 
 @Component({
-  selector: 'ngx-monaco-editor',
-  template: '<div class="editor-container" #editorContainer></div>',
-  styles: [`
+    selector: 'ngx-monaco-editor',
+    template: '<div class="editor-container" #editorContainer></div>',
+    styles: [`
 
 
       .editor-container {
@@ -20,11 +20,12 @@ declare let monaco: any;
           height: 100%;
       }
   `],
-  providers: [{
-    provide: NG_VALUE_ACCESSOR,
-    useExisting: forwardRef(() => EditorComponent),
-    multi: true,
-  }],
+    providers: [{
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => EditorComponent),
+            multi: true,
+        }],
+    standalone: true,
 })
 export class EditorComponent extends BaseEditor implements ControlValueAccessor {
   private _value: string = '';

@@ -6,17 +6,15 @@ import { DiffEditorComponent } from './diff-editor.component';
 import { EditorComponent } from './editor.component';
 
 @NgModule({
-  imports: [
-    CommonModule
-  ],
-  declarations: [
-    EditorComponent,
-    DiffEditorComponent
-  ],
-  exports: [
-    EditorComponent,
-    DiffEditorComponent
-  ]
+    imports: [
+        CommonModule,
+        EditorComponent,
+        DiffEditorComponent
+    ],
+    exports: [
+        EditorComponent,
+        DiffEditorComponent
+    ]
 })
 export class MonacoEditorModule {
   public static forRoot(config: NgxMonacoEditorConfig = {}): ModuleWithProviders<MonacoEditorModule> {
