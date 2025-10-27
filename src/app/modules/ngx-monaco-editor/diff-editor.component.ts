@@ -1,17 +1,16 @@
-import { Component, Inject, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 import { fromEvent } from 'rxjs';
 
 import { BaseEditor } from './base-editor';
-import { NGX_MONACO_EDITOR_CONFIG, NgxMonacoEditorConfig } from './config';
 import { DiffEditorModel } from './types';
 
 declare let monaco: any;
 
 @Component({
-    selector: 'ngx-monaco-diff-editor',
-    template: '<div class="editor-container" #editorContainer></div>',
-    styles: [`
+  selector: 'ngx-monaco-diff-editor',
+  template: '<div class="editor-container" #editorContainer></div>',
+  styles: [`
     :host {
       display: block;
       height: 200px;
@@ -22,15 +21,15 @@ declare let monaco: any;
       height: 100%;
     }
   `],
-    standalone: true,
+  standalone: true,
 })
 export class DiffEditorComponent extends BaseEditor {
 
-  _originalModel: DiffEditorModel;
-  _modifiedModel: DiffEditorModel;
+  private _originalModel: DiffEditorModel;
+  private _modifiedModel: DiffEditorModel;
 
   @Input('options')
-  set options(options: any) {
+  public set options(options: any) {
     this._options = { ...this.config.defaultOptions, ...options };
     if (this._editor) {
       this._editor.dispose();
@@ -38,12 +37,12 @@ export class DiffEditorComponent extends BaseEditor {
     }
   }
 
-  get options(): any {
+  public get options(): any {
     return this._options;
   }
 
   @Input('originalModel')
-  set originalModel(model: DiffEditorModel) {
+  public set originalModel(model: DiffEditorModel) {
     this._originalModel = model;
     if (this._editor) {
       this._editor.dispose();
@@ -52,7 +51,7 @@ export class DiffEditorComponent extends BaseEditor {
   }
 
   @Input('modifiedModel')
-  set modifiedModel(model: DiffEditorModel) {
+  public set modifiedModel(model: DiffEditorModel) {
     this._modifiedModel = model;
     if (this._editor) {
       this._editor.dispose();
@@ -60,12 +59,7 @@ export class DiffEditorComponent extends BaseEditor {
     }
   }
 
-  constructor(@Inject(NGX_MONACO_EDITOR_CONFIG) private editorConfig: NgxMonacoEditorConfig) {
-    super(editorConfig);
-  }
-
   protected initMonaco(options: any): void {
-
     if (!this._originalModel || !this._modifiedModel) {
       throw new Error('originalModel or modifiedModel not found for ngx-monaco-diff-editor');
     }

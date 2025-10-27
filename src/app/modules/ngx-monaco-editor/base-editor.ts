@@ -1,10 +1,10 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, Inject, OnDestroy, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, OnDestroy, Output, ViewChild, inject } from '@angular/core';
 
 import { Subscription } from 'rxjs';
 
 import { editor } from 'monaco-editor';
 
-import { NGX_MONACO_EDITOR_CONFIG, NgxMonacoEditorConfig } from './config';
+import { NGX_MONACO_EDITOR_CONFIG } from './config';
 
 let loadedMonaco = false;
 let loadPromise: Promise<void>;
@@ -22,11 +22,10 @@ export abstract class BaseEditor implements AfterViewInit, OnDestroy {
   protected _options: any;
   protected _windowResizeSubscription: Subscription;
 
-  constructor(@Inject(NGX_MONACO_EDITOR_CONFIG) protected config: NgxMonacoEditorConfig) {}
+  public config = inject(NGX_MONACO_EDITOR_CONFIG);
 
   public ngAfterViewInit(): void {
     if (loadedMonaco) {
-      // Wait until monaco editor is available
       loadPromise.then(() => {
         this.initMonaco(this._options);
       });

@@ -1,13 +1,5 @@
 import { DOCUMENT } from '@angular/common';
-import {
-  Component,
-  EventEmitter,
-  Inject,
-  Input,
-  OnInit,
-  Output,
-  forwardRef,
-} from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, forwardRef, inject } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormsModule } from '@angular/forms';
 
 import { editor } from 'monaco-editor';
@@ -29,6 +21,8 @@ import { EditorComponent } from '../../modules/ngx-monaco-editor/editor.componen
     imports: [EditorComponent, FormsModule],
 })
 export class FsTextEditorComponent implements OnInit, ControlValueAccessor {
+  private _document = inject<Document>(DOCUMENT);
+
 
   public readonly LINE_HEIGHT = 18;
 
@@ -45,9 +39,7 @@ export class FsTextEditorComponent implements OnInit, ControlValueAccessor {
   private _value = '';
   private _window: any;
 
-  constructor(
-    @Inject(DOCUMENT) private _document: Document,
-  ) {
+  constructor() {
     this._window = this._document.defaultView;
   }
 

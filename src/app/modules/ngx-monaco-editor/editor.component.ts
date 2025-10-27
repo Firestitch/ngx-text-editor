@@ -1,18 +1,18 @@
-import { Component, forwardRef, Inject, Input, NgZone } from '@angular/core';
+import { Component, Input, NgZone, forwardRef, inject } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import { fromEvent } from 'rxjs';
 
 import { BaseEditor } from './base-editor';
-import { NGX_MONACO_EDITOR_CONFIG, NgxMonacoEditorConfig } from './config';
+import { NgxMonacoEditorConfig } from './config';
 import { NgxEditorModel } from './types';
 
 declare let monaco: any;
 
 @Component({
-    selector: 'ngx-monaco-editor',
-    template: '<div class="editor-container" #editorContainer></div>',
-    styles: [`
+  selector: 'ngx-monaco-editor',
+  template: '<div class="editor-container" #editorContainer></div>',
+  styles: [`
 
 
       .editor-container {
@@ -20,14 +20,17 @@ declare let monaco: any;
           height: 100%;
       }
   `],
-    providers: [{
-            provide: NG_VALUE_ACCESSOR,
-            useExisting: forwardRef(() => EditorComponent),
-            multi: true,
-        }],
-    standalone: true,
+  providers: [{
+    provide: NG_VALUE_ACCESSOR,
+    useExisting: forwardRef(() => EditorComponent),
+    multi: true,
+  }],
+  standalone: true,
 })
 export class EditorComponent extends BaseEditor implements ControlValueAccessor {
+  private zone = inject(NgZone);
+  private editorConfig: NgxMonacoEditorConfig;
+
   private _value: string = '';
 
   public propagateChange = (_: any) => {};
@@ -47,16 +50,12 @@ export class EditorComponent extends BaseEditor implements ControlValueAccessor 
   }
 
   @Input('model')
-  set model(model: NgxEditorModel) {
+  public set model(model: NgxEditorModel) {
     this.options.model = model;
     if (this._editor) {
       this._editor.dispose();
       this.initMonaco(this.options);
     }
-  }
-
-  constructor(private zone: NgZone, @Inject(NGX_MONACO_EDITOR_CONFIG) private editorConfig: NgxMonacoEditorConfig) {
-    super(editorConfig);
   }
 
   public writeValue(value: any): void {
