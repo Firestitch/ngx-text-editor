@@ -1,23 +1,23 @@
 import { enableProdMode, importProvidersFrom } from '@angular/core';
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
-
-
-import { environment } from './environments/environment';
-import { BrowserModule, bootstrapApplication } from '@angular/platform-browser';
-import { FsTextEditorModule } from '@firestitch/text-editor';
-import { provideAnimations } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
+import { BrowserModule, bootstrapApplication } from '@angular/platform-browser';
+import { Routes, provideRouter } from '@angular/router';
+
 import { FsExampleModule } from '@firestitch/example';
 import { FsMessageModule } from '@firestitch/message';
+import { FsTextEditorModule } from '@firestitch/text-editor';
+
+import { provideAnimations } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
-import { provideRouter, Routes } from '@angular/router';
-import { ExamplesComponent } from './app/components';
+
+
 import { AppComponent } from './app/app.component';
+import { ExamplesComponent } from './app/components';
+import { environment } from './environments/environment';
 
 const routes: Routes = [
   { path: '', component: ExamplesComponent },
 ];
-
 
 
 if (environment.production) {
@@ -25,11 +25,11 @@ if (environment.production) {
 }
 
 bootstrapApplication(AppComponent, {
-    providers: [
-        importProvidersFrom(BrowserModule, FsTextEditorModule.forRoot(), FormsModule, FsExampleModule.forRoot(), FsMessageModule.forRoot(), ToastrModule.forRoot({ preventDuplicates: true })),
-        provideAnimations(),
-        provideRouter(routes),
-    ]
+  providers: [
+    importProvidersFrom(BrowserModule, FsTextEditorModule.forRoot(), FormsModule, FsExampleModule.forRoot(), FsMessageModule.forRoot(), ToastrModule.forRoot({ preventDuplicates: true })),
+    provideAnimations(),
+    provideRouter(routes),
+  ],
 })
-  .catch(err => console.error(err));
+  .catch((err) => console.error(err));
 

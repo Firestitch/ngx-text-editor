@@ -1,3 +1,9 @@
 ngx-monaco-editor {
   display: block;
+
+  ::ng-deep {
+    .monaco-editor {
+      min-height: var(--min-height);
+    }
+  }
 }

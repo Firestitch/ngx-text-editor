@@ -5,4 +5,5 @@ export interface FsTextEditorConfig extends editor.IStandaloneEditorConstruction
   ready?: (editor: editor.ICodeEditor) => void;
   blur?: () => void;
   focus?: () => void;
+  minHeight?: number;
 }

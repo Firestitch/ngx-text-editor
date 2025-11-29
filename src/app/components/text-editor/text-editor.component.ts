@@ -1,6 +1,6 @@
 import { DOCUMENT } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit, Output, forwardRef, inject } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormsModule } from '@angular/forms';
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, forwardRef, inject } from '@angular/core';
+import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import { editor } from 'monaco-editor';
 
@@ -9,20 +9,18 @@ import { EditorComponent } from '../../modules/ngx-monaco-editor/editor.componen
 
 
 @Component({
-    selector: 'fs-text-editor',
-    templateUrl: './text-editor.component.html',
-    styleUrls: ['./text-editor.component.scss'],
-    providers: [{
-            provide: NG_VALUE_ACCESSOR,
-            useExisting: forwardRef(() => FsTextEditorComponent),
-            multi: true,
-        }],
-    standalone: true,
-    imports: [EditorComponent, FormsModule],
+  selector: 'fs-text-editor',
+  templateUrl: './text-editor.component.html',
+  styleUrls: ['./text-editor.component.scss'],
+  providers: [{
+    provide: NG_VALUE_ACCESSOR,
+    useExisting: forwardRef(() => FsTextEditorComponent),
+    multi: true,
+  }],
+  standalone: true,
+  imports: [EditorComponent, FormsModule],
 })
 export class FsTextEditorComponent implements OnInit, ControlValueAccessor {
-  private _document = inject<Document>(DOCUMENT);
-
 
   public readonly LINE_HEIGHT = 18;
 
@@ -37,7 +35,9 @@ export class FsTextEditorComponent implements OnInit, ControlValueAccessor {
 
   private _editorRef: editor.ICodeEditor;
   private _value = '';
-  private _window: any;
+  private _window: any;  
+  private _document = inject<Document>(DOCUMENT);
+  private _elementRef = inject(ElementRef);
 
   constructor() {
     this._window = this._document.defaultView;
@@ -53,6 +53,7 @@ export class FsTextEditorComponent implements OnInit, ControlValueAccessor {
         minimap: {
           enabled: false,
         },
+        minHeight: this.config.minHeight ?? 150,
         theme: 'vs-dark',
         automaticLayout: !!this.config.height,
         scrollBeyondLastLine: false,
@@ -62,6 +63,11 @@ export class FsTextEditorComponent implements OnInit, ControlValueAccessor {
         hideCursorInOverviewRuler: true,
         ...this.config,
       };
+    }
+    
+    if (this.config.minHeight) {
+      this._elementRef.nativeElement.style
+        .setProperty('--min-height', `${this.config.minHeight}px`);
     }
   }
 
@@ -86,9 +92,9 @@ export class FsTextEditorComponent implements OnInit, ControlValueAccessor {
     });
 
     // moved forward for cases when several editors should be initialized on the same page
-    setTimeout(() => {
-      this._cleanupAMDLoader();
-    }, 100);
+    // setTimeout(() => {
+    //   this._cleanupAMDLoader();
+    // }, 100);
   }
 
   public writeValue(value: any): void {
@@ -170,8 +176,8 @@ export class FsTextEditorComponent implements OnInit, ControlValueAccessor {
     }, true);
   }
 
-  private _cleanupAMDLoader(): void {
-    // must be there to cleanup https://github.com/microsoft/monaco-editor/issues/827
-    this._window.define = null;
-  }
+//   private _cleanupAMDLoader(): void {
+//     // must be there to cleanup https://github.com/microsoft/monaco-editor/issues/827
+//     //this._window.define = null;
+//   }
 }

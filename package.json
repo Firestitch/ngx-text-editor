@@ -2,7 +2,7 @@
   "name": "@firestitch/text-editor",
   "title": "Text Editor",
   "description": "@firestitch/ngx-text-editor",
-  "version": "18.0.2",
+  "version": "18.0.3",
   "repository": {
     "type": "git",
     "url": "https://github.com/Firestitch/ngx-text-editor"
@@ -29,7 +29,7 @@
     "npm-update": "npx npm-check-updates -u \"/@firestitch/\" --target semver"
   },
   "dependencies": {
-    "monaco-editor": "^0.45.0"
+    "monaco-editor": "^0.55.1"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^18.2.7",

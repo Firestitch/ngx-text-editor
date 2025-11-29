@@ -1,10 +1,14 @@
 <div class="editor-container">
-  <fs-text-editor [(ngModel)]="model" [config]="config"></fs-text-editor>
+  <fs-text-editor
+    [(ngModel)]="model"
+    [config]="config">
+  </fs-text-editor>
 </div>
-
 @if (model) {
   <fieldset>
-    <legend>Result</legend>
+    <legend>
+      Result
+    </legend>
     {{ model | json }}
   </fieldset>
 }
