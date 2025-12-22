@@ -1,5 +1,5 @@
 import { DOCUMENT } from '@angular/common';
-import { Component, ElementRef, EventEmitter, Input, OnInit, Output, forwardRef, inject } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, forwardRef, inject } from '@angular/core';
 import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import { editor } from 'monaco-editor';
@@ -20,7 +20,7 @@ import { EditorComponent } from '../../modules/ngx-monaco-editor/editor.componen
   standalone: true,
   imports: [EditorComponent, FormsModule],
 })
-export class FsTextEditorComponent implements OnInit, ControlValueAccessor {
+export class FsTextEditorComponent implements OnInit, ControlValueAccessor, OnDestroy {
 
   public readonly LINE_HEIGHT = 18;
 
@@ -87,7 +87,7 @@ export class FsTextEditorComponent implements OnInit, ControlValueAccessor {
       }
 
       if(this.config.ready) {
-        this.config.ready(this._editorRef);
+        this.config.ready(this._editorRef, this.monaco);
       }
     });
 
@@ -120,11 +120,17 @@ export class FsTextEditorComponent implements OnInit, ControlValueAccessor {
     this.onTouched = fn;
   }
 
+  public ngOnDestroy(): void {
+    if(this.config.destroy) {
+      this.config.destroy(this._editorRef, this.monaco);
+    }
+  }
+
   private _initEditor() {
     if (this._editorRef && !this.config.height) {
       this._updateEditorHeight();
 
-      this._editorRef.onDidChangeModelContent((e) => {
+      this._editorRef.onDidChangeModelContent(() => {
         this._updateEditorHeight();
       });
     }
@@ -175,9 +181,4 @@ export class FsTextEditorComponent implements OnInit, ControlValueAccessor {
       e.stopPropagation();
     }, true);
   }
-
-//   private _cleanupAMDLoader(): void {
-//     // must be there to cleanup https://github.com/microsoft/monaco-editor/issues/827
-//     //this._window.define = null;
-//   }
 }
