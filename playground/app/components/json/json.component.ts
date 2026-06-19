@@ -63,7 +63,7 @@ export class JsonComponent implements OnInit {
     };
   }
 
-  public init(editor) {
+  public init() {
     this.textEditor.monaco.languages.typescript.typescriptDefaults.addExtraLib('const testObject: { name: string, id: int };');
   }
 
