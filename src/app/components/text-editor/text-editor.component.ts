@@ -22,8 +22,6 @@ import { EditorComponent } from '../../modules/ngx-monaco-editor/editor.componen
 })
 export class FsTextEditorComponent implements OnInit, ControlValueAccessor, OnDestroy {
 
-  public readonly LINE_HEIGHT = 18;
-
   @Input() public config: FsTextEditorConfig = {};
   @Input() public scrollable = false;
 
@@ -130,7 +128,9 @@ export class FsTextEditorComponent implements OnInit, ControlValueAccessor, OnDe
     if (this._editorRef && !this.config.height) {
       this._updateEditorHeight();
 
-      this._editorRef.onDidChangeModelContent(() => {
+      // Fires for edits and for re-wrapping after a width change, unlike
+      // onDidChangeModelContent which only covers edits
+      this._editorRef.onDidContentSizeChange(() => {
         this._updateEditorHeight();
       });
     }
@@ -152,25 +152,16 @@ export class FsTextEditorComponent implements OnInit, ControlValueAccessor, OnDe
   private _updateEditorHeight() {
     const editorDomNode = this._editorRef.getDomNode();
 
-    if (!editorDomNode) {
+    if (!editorDomNode || !this._editorRef.getModel()) {
       return;
     }
 
-    const container = editorDomNode.getElementsByClassName('view-lines')[0] as HTMLElement;
-    const lineHeight = container.firstChild
-      ? (container.firstChild as HTMLElement).offsetHeight
-      : this.LINE_HEIGHT;
-
-    const editorModel = this._editorRef.getModel();
-
-    if (!editorModel) {
-      return;
-    }
-
-    const nextHeight = this._editorRef.getModel().getLineCount() * lineHeight;
+    // Content height counts wrapped rows, not just model lines, so a single
+    // long line rendered with wordWrap is sized to what is actually drawn
+    const nextHeight = this._editorRef.getContentHeight();
 
     // set the height and redo layout
-    editorDomNode.style.height = `${nextHeight  }px`;
+    editorDomNode.style.height = `${nextHeight}px`;
     this.updateLayout();
   }
 
