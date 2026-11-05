@@ -22,6 +22,7 @@
   "typings": "package/index.d.ts",
   "scripts": {
     "package": "cd node_modules/@firestitch/component-tools && npm run cli:package",
+    "postpackage": "node scripts/copy-monaco-assets.mjs",
     "package:test": "cd node_modules/@firestitch/component-tools && npm run cli:package:test",
     "package:publish": "cd node_modules/@firestitch/component-tools && npm run cli:package:publish",
     "demo:build": "cd node_modules/@firestitch/component-tools && npm run cli:demo",
